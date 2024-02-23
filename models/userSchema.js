@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import dbconnect from '../app/mogoose.js'
+import dbconnect from '../mogoose.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'

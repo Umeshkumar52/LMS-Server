@@ -2,7 +2,7 @@ import Razorpay from "razorpay"
 import Users from '../models/userSchema.js'
 import Courses from '../models/courseModel.js'
 import payment from "../models/paymentModel.js"
-import {razorpayInstance} from '../app/user.js'
+import {razorpayInstance} from '../index.js'
 import crypto from 'crypto';
 import { error, log } from "console";
 const allPayments=async function(req,res,next){

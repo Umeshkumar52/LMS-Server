@@ -136,26 +136,100 @@ const createCourse=async function (req,res,next){
          success:false,
          message:"All Fields are mandatory"
         })
-         }   
-    // const course=await Courses.create({
-    //     tittle,
-    //     description,
-    //     thumnail:{
-    //         public_id:"222224fdgfd1fggf45",
-    //         secure_url:"domeUrlsafe usrdds"
-    //     },
-    //     createBy
-    // })
-   
-// if(!course){
-//     return  res.status(400).json({
-//         success:true,
-//         message:" We are unable to create course, Please try again"
-//     })
-// }
+         } 
+         const course=await Courses.create({
+            tittle,
+            description,
+            thumnail:{
+                public_id:"Public_id",
+                secure_url:"secure_url"
+            },
+            createBy
+        })   
+if(!course){
+    return  res.status(400).json({
+        success:true,
+        message:" We are unable to create course, Please try again"
+    })
+}  
 if(req.file){
-        try {
-            const result=await cloudinary.uploader
+            try {
+                const result=await cloudinary.uploader
+                .upload(req.file.path,{
+                    folder:"courses",
+                    use_filename:true,
+                    unique_filename:false,
+                    overwrite:true,
+                    width:426,
+                    height:240
+                }) 
+                console.log(result);
+                if(result){
+                        course.thumnail.publice_id=result.public_id;
+                        course.thumnail.secure_url = result.secure_url;
+                        // fs.rm(`uplods/${req.file.filename}`)
+                     }
+                     await course.save() 
+                     res.status(200).json({
+                       success:true,
+                       message:'Course created successfully',course
+                     })
+                 } catch (error) {
+                 return res.status(400).json({
+                  success:false,
+                  message:'Failed to upload img', error
+                 })
+             }
+
+// if(req.file){
+//         try {
+//             const result=await cloudinary.uploader
+//             .upload(req.file.path,{
+//                 folder:"courses",
+//                 use_filename:true,
+//                 unique_filename:false,
+//                 overwrite:true,
+//                 width:426,
+//                 height:240
+//             }) 
+//             const course=await Courses.create({
+//                 tittle,
+//                 description,
+//                 thumnail:{
+//                     public_id:"222224fdgfd1fggf45",
+//                     secure_url:"domeUrlsafe usrdds"
+//                 },
+//                 createBy
+//             })
+//             if(result){
+//               course.thumnail.publice_id=result.public_id;
+//               course.thumnail.secure_url = result.secure_url;
+//               fs.rm(`uplods/${req.file.filename}`)
+//             }
+//             await course.save() 
+//             res.status(200).json({
+//                 success:true,
+//                 message:'Course created successfully',course
+//             })
+//            } catch (error) {
+//             return res.status(400).json({
+//               success:false,
+//               message:'Failed to upload img',
+//               error
+//             })
+//            }
+//         }   
+   }
+}
+   const updateCourse=async function(req,res,next){
+    try {
+        const {id}=req.params;
+        const {tittle,description,createBy,thumnail}=req.body
+        console.log(req.file,id,tittle,description,req.body);
+      console.log(req.file);
+        if(req.file){
+            const cours=await find({"_id":id})
+          let result=await cloudinary.uploader
             .upload(req.file.path,{
                 folder:"courses",
                 use_filename:true,
@@ -163,57 +237,31 @@ if(req.file){
                 overwrite:true,
                 width:426,
                 height:240
-            }) 
-            const course=await Courses.create({
-                tittle,
-                description,
-                thumnail:{
-                    public_id:"222224fdgfd1fggf45",
-                    secure_url:"domeUrlsafe usrdds"
-                },
-                createBy
             })
             if(result){
-              course.thumnail.publice_id=result.public_id;
-              course.thumnail.secure_url = result.secure_url;
-              fs.rm(`uplods/${req.file.filename}`)
-            }
-            await course.save() 
-            res.status(200).json({
-                success:true,
-                message:'Course created successfully',course
-            })
-           } catch (error) {
-            return res.status(400).json({
-              success:false,
-              message:'Failed to upload img',
-              error
-            })
-           }
-        }   
-   }
-   const updateCourse=async function(req,res,next){
-    try {
-        const {id}=req.params;
-        const {tittle,description,createBy,thumnail}=req.body
-        console.log(req.file,id,tittle,description,req.body);
-        //  const response= await Courses.findByIdAndUpdate(
-        //     id,
-        //     {$set:req.body},
-        //     {runValidators:true}
-        //     )
-        //   console.log(response);
-        //    res.status(200).json({
-        //     success:true,
-        //     message:'Course update successfully'           
-        //    })          
+                cours.thumnail.publice_id=result.public_id;
+                cours.thumnail.secure_url = result.secure_url;
+                await cours.save()
+                // fs.rm(`uplods/${req.file.filename}`)
+             }
+        }
+         const response= await Courses.findByIdAndUpdate(
+            id,
+            {$set:req.body},
+            {runValidators:true}
+            )
+          console.log("response",response);
+           res.status(200).json({
+            success:true,
+            message:'Course update successfully'           
+           })          
      } catch (error) {
           return res.status(400).json({
             success:false,
             message:' unable to update course, pleasse try again'
           })
       }
-   }
+    }
    const deletCourse=async function(req,res,next){
     try {
     const {id}=req.params;
