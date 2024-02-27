@@ -76,10 +76,9 @@ const register=async(req,res)=>{
               
             await user.save() 
             const token = await user.genJwtToken()
-            console.log("token",token);
             user.token=token
             user.password=undefined
-            // localStorage.setItem("token",token)
+           
             res.cookie("token",token,cookieOptions) 
             res.status(200).json({
                 success:true,
@@ -94,14 +93,14 @@ const register=async(req,res)=>{
             }
      }
 
-// Login
+
 const login=async(req,res)=>{
     try {
       const {Email,password} =req.body
         const user = await userSchema
              .findOne({Email})
              .select('+password');
-            console.log(await user.validator(password,user.password));
+           
             if(user==null || await user.validator(password,user.password) ==false){
               return res.status(400).json({
                     success:false,
@@ -111,7 +110,6 @@ const login=async(req,res)=>{
               const token=await user.genJwtToken() 
               user.password=undefined;    
               user.token=token 
-            
             res.cookie("token",token,cookieOptions)
              return res.status(200).json({
             success:true,
@@ -125,11 +123,11 @@ const login=async(req,res)=>{
         })
     }
 }
-// Users Profile
+
 async function getProfile(req,res,next){
   try {
 const{token}=req.cookies;
-  console.log(token);
+ 
   const user=await userSchema.findById(req.user._id)
  return res.status(200).json({
     success:true,
@@ -142,7 +140,7 @@ const{token}=req.cookies;
 }) 
 }
     }
-    // UPDATE pROFILE
+  
     const updateProfile=async function(req,res,next){
       try {
             const {_id}=req.user;
@@ -162,7 +160,7 @@ const{token}=req.cookies;
             })
         }
      }
-// Logout the user 
+
 async function logout(req,res,next){
  
 try {
@@ -201,9 +199,9 @@ async function forgetPassword(req,res,next){
     const resetToken= await user.passwordResetToken()
     await user.save()
     const resetPasswordUrl=`http://localhost:3000/reset-password/?resetToken=${resetToken}`
-    console.log(resetPasswordUrl);
+    
    const mail=await SendMail(Email,'Reset your forget password',resetPasswordUrl);
-   console.log("here");
+  
   return res.status(200).json({
         success:true,
         message:`Link has been send to reset password to ${Email} successfully`
@@ -227,7 +225,7 @@ if(newPassword !=confirmPassword){
 try {
  const user=await userSchema.findOne({
    resetpasswordToken:token,
-  // forgetPasswordExfire:{$gt:Date.now()}
+  
  })
 if(!user){
   return res.status(400).json({
@@ -250,7 +248,7 @@ return res.status(200).json({
 }
 async function queryData(req,res,next){
   try {
-    console.log(req.body);
+   
   const {
     firstName,
     lastName,

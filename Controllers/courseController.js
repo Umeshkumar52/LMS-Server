@@ -27,9 +27,9 @@ const courses=async  function(req,res,next){
 const courseByName=async function(req,res,next){
     try {
         const {Name}=req.params
-        console.log("name",Name);
+      
         const response=await Courses.find({"tittle":Name})
-        console.log(response);
+    
         res.status(200).json({
             success:true,
             message:response
@@ -60,7 +60,7 @@ try {
 const enrollCouurseByUser=async function(req,res,next){
     try {
         const{courseId}=req.params
-    const {}=req.body
+   
     const {_id}=req.user
     const user=await Users.findById(_id) 
     const course=await Courses.findById(courseId)
@@ -109,9 +109,9 @@ const enrollCouurseByUser=async function(req,res,next){
     try {
         const {courseId}=req.params;
         const {_id}=req.user;
-        console.log(courseId,_id);
+       
         const userEnrollCourseId=await Users.findById(_id)
-        console.log("Enroll",userEnrollCourseId.enrollCourses);
+       
         if(courseId!=userEnrollCourseId.enrollCourses){
             return res.status(200).json({
                 success:true,
@@ -179,54 +179,12 @@ if(req.file){
                   success:false,
                   message:'Failed to upload img', error
                  })
-             }
-
-// if(req.file){
-//         try {
-//             const result=await cloudinary.uploader
-//             .upload(req.file.path,{
-//                 folder:"courses",
-//                 use_filename:true,
-//                 unique_filename:false,
-//                 overwrite:true,
-//                 width:426,
-//                 height:240
-//             }) 
-//             const course=await Courses.create({
-//                 tittle,
-//                 description,
-//                 thumnail:{
-//                     public_id:"222224fdgfd1fggf45",
-//                     secure_url:"domeUrlsafe usrdds"
-//                 },
-//                 createBy
-//             })
-//             if(result){
-//               course.thumnail.publice_id=result.public_id;
-//               course.thumnail.secure_url = result.secure_url;
-//               fs.rm(`uplods/${req.file.filename}`)
-//             }
-//             await course.save() 
-//             res.status(200).json({
-//                 success:true,
-//                 message:'Course created successfully',course
-//             })
-//            } catch (error) {
-//             return res.status(400).json({
-//               success:false,
-//               message:'Failed to upload img',
-//               error
-//             })
-//            }
-//         }   
+             }         
    }
 }
    const updateCourse=async function(req,res,next){
     try {
         const {id}=req.params;
-        const {tittle,description,createBy,thumnail}=req.body
-        console.log(req.file,id,tittle,description,req.body);
-      console.log(req.file);
         if(req.file){
             const cours=await find({"_id":id})
           let result=await cloudinary.uploader
@@ -242,7 +200,7 @@ if(req.file){
                 cours.thumnail.publice_id=result.public_id;
                 cours.thumnail.secure_url = result.secure_url;
                 await cours.save()
-                // fs.rm(`uplods/${req.file.filename}`)
+              
              }
         }
          const response= await Courses.findByIdAndUpdate(
@@ -250,7 +208,7 @@ if(req.file){
             {$set:req.body},
             {runValidators:true}
             )
-          console.log("response",response);
+         
            res.status(200).json({
             success:true,
             message:'Course update successfully'           
