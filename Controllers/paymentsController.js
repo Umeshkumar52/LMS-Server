@@ -1,19 +1,8 @@
-import Razorpay from "razorpay"
 import Users from '../models/userSchema.js'
-import Courses from '../models/courseModel.js'
-import payment from "../models/paymentModel.js"
 import {razorpayInstance} from '../index.js'
 import crypto from 'crypto';
-import { error, log } from "console";
 const allPayments=async function(req,res,next){
-   try {
-    const option={
-        from:'2024-01-01',
-        to:'2024-02-02'
-      }   
-    //   if(option){ 
-    // const allPayouts=await razorpayInstance.payments.all(option)
-    //   }
+   try {  
       const allPayouts=await razorpayInstance.payments.all()
     return res.status(200).json({
          success:true,
@@ -57,7 +46,6 @@ const Buysubscription=async function(req,res,next){
         })
       }      
       user.subscription.id=subscription.id;
-      // user.subscription.status=subscription.status;
       await user.save();
       res.status(200).json({
        success:true,
@@ -72,8 +60,6 @@ const Buysubscription=async function(req,res,next){
     }}
 const verifySubscription=async function(req,res,next){
   try {
-    console.log("verify calling");
-     console.log("parmamss",req.params,req.body);
   const {_id}=req.user
  const {id}=req.params
   const { razorpay_payment_id,razorpay_subscription_id,razorpay_signature}=req.body;
@@ -87,7 +73,6 @@ const verifySubscription=async function(req,res,next){
     .createHmac('sha256',process.env.RAZORPAY_SECRET_ID)
      .update(`${razorpay_payment_id} | ${razorpay_subscription_id}`)
     .digest('hex')
-    console.log("payments", generatedSignature ,razorpay_signature);
     if(generatedSignature==razorpay_signature){
         return res.status(500).json({
             success:false,
@@ -118,7 +103,6 @@ const verifySubscription=async function(req,res,next){
 }
 const createOrder=async function(req,res,next){
     const {amount}=req.body
-    console.log(req.body);
   try {
     const options={
         amount:amount*100,
@@ -130,7 +114,6 @@ const createOrder=async function(req,res,next){
         }
        }
        const response=await razorpayInstance.orders.create(options)
-       console.log(response);
        if(!response){
         return res.status(400).json({
             success:false,

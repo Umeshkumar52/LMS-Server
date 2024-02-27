@@ -1,14 +1,8 @@
 import userSchema from '../models/userSchema.js';
 import querySchema from '../models/queryModel.js'
 import fs from 'fs'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-import AppError from '../utilities/AppError.js';
-import multer from 'multer';
 import cloudinary from 'cloudinary'
-import upload from '../midilewars/multerMiddilerware.js'
 import SendMail from '../utilities/sendMail.js'
-import { log } from 'console';
 const cookieOptions={
     expires:new Date(Date.now()+7*24*60*60*1000),
     httpOnly:true,
@@ -107,7 +101,7 @@ const login=async(req,res)=>{
         const user = await userSchema
              .findOne({Email})
              .select('+password');
-            
+            console.log(await user.validator(password,user.password));
             if(user==null || await user.validator(password,user.password) ==false){
               return res.status(400).json({
                     success:false,

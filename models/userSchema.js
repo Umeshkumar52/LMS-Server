@@ -67,7 +67,6 @@ userSchema.methods={
              process.env.JWT_SECRET_KEY,
             {
                 algorithm:'HS256',
-                // HS512
               expiresIn:process.env.EXFIRE,
             },
           );

@@ -10,8 +10,6 @@ router.route('/order')
 .post(createOrder)
 router.route('/allPayouts')
 .get(allPayments)
-// router.route('/cretePlans')
-// .post(createPlans)
 router.route('/:id')
 .post(islogined,Buysubscription)
 export default router;
