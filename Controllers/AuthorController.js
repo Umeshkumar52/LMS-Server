@@ -65,14 +65,13 @@ const register=async(req,res)=>{
                   user.avatar.public_id=result.public_id;
                   user.avatar.secure_URL = result.secure_url;
                 
-                  // fs.unlinkSync(`../uplods/${req.file.filename}`,(err)=>{
-                  //   return res.status(400).json({
-                  //     success:false,
-                  //     message:"failed to upload image"
-                  //   })
-                  // })
+                  fs.unlink(`../uplods/${req.file.filename}`,(err)=>{
+                    return res.status(200).json({
+                      success:true,
+                      message:"deleted img"
+                    })
+                  })
                 }
-              
           }catch(error){
                 return res.status(400).json({
                   success:false,
