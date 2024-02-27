@@ -163,11 +163,11 @@ if(req.file){
                     width:426,
                     height:240
                 }) 
-                console.log(result);
+               
                 if(result){
                         course.thumnail.publice_id=result.public_id;
                         course.thumnail.secure_url = result.secure_url;
-                        // fs.rm(`uplods/${req.file.filename}`)
+                        fs.unlink(`uplods/${req.file.filename}`)
                      }
                      await course.save() 
                      res.status(200).json({
