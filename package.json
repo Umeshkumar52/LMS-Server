@@ -29,7 +29,7 @@
     "build": "cd client/client-app && npm install && npm run build"
   },
   "engines": {
-    "node": "v18.19.1"
+     "node": "v20.0.0"
   },
   "keywords": [],
   "author": "",
