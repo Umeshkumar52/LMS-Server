@@ -184,31 +184,37 @@ if(req.file){
 }
    const updateCourse=async function(req,res,next){
     try {
-        const {id}=req.params;
-        if(req.file){
-            const cours=await find({"_id":id})
-          let result=await cloudinary.uploader
-            .upload(req.file.path,{
-                folder:"courses",
-                use_filename:true,
-                unique_filename:false,
-                overwrite:true,
-                width:426,
-                height:240
-            })
-            if(result){
-                cours.thumnail.publice_id=result.public_id;
-                cours.thumnail.secure_url = result.secure_url;
-                await cours.save()
-              
-             }
+        const {tittle,description,createBy}=req.body
+        let data={
+            tittle:tittle,
+            description:description,
+            createBy:createBy
         }
-         const response= await Courses.findByIdAndUpdate(
+        const {id}=req.params;
+        
+         const course= await Courses.findByIdAndUpdate(
             id,
-            {$set:req.body},
+            {$set:data},
             {runValidators:true}
             )
-         
+            console.log(req.file);
+            if(req.file){
+                let result=await cloudinary.uploader
+                  .upload(req.file.path,{
+                      folder:"courses",
+                      use_filename:true,
+                      unique_filename:false,
+                      overwrite:true,
+                      width:426,
+                      height:240
+                  })
+                  if(result){
+                      course.thumnail.publice_id=result.public_id;
+                      course.thumnail.secure_url = result.secure_url;                    
+                   }
+                   await course.save()
+              }
+              await course.save()
            res.status(200).json({
             success:true,
             message:'Course update successfully'           

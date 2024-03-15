@@ -3,7 +3,6 @@ const authorisedRole=async(req,res,next)=>{
     try {
         const {token}=req.cookies;
         const userDetails=await jwt.decode(token,process.env.JWT_SECRET_KEY) 
-      console.log("role",userDetails.role);
         if(userDetails.role !='ADMIN'){
             return res.status(403).json({
                 success:false,

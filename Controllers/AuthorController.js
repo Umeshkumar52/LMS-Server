@@ -3,6 +3,8 @@ import querySchema from '../models/queryModel.js'
 import fs from 'fs'
 import cloudinary from 'cloudinary'
 import SendMail from '../utilities/sendMail.js'
+import path from 'path';
+import { log } from 'console';
 const cookieOptions={
     expires:new Date(Date.now()+7*24*60*60*1000),
     httpOnly:true,
@@ -10,6 +12,7 @@ const cookieOptions={
  }
 const register=async(req,res)=>{
     const {Email,password,FullName}=req.body;  
+   
     if(!FullName,!Email || !password){
         return res.status(400).json({
             success:false,
@@ -24,6 +27,7 @@ const register=async(req,res)=>{
                 message:`User allready exist `
               })
         }
+       
         const user= await userSchema.create({
             FullName,
             Email,
@@ -36,7 +40,8 @@ const register=async(req,res)=>{
               id:'',
               status:"inactive"
             }
-        })     
+        })    
+ 
             if(!user){
                 return res.status(400).json({
                     success:false,
@@ -58,13 +63,6 @@ const register=async(req,res)=>{
                 if(result){
                   user.avatar.public_id=result.public_id;
                   user.avatar.secure_URL = result.secure_url;
-                
-                  fs.unlink(`../uplods/${req.file.filename}`,(err)=>{
-                    return res.status(200).json({
-                      success:true,
-                      message:"deleted img"
-                    })
-                  })
                 }
           }catch(error){
                 return res.status(400).json({
@@ -73,12 +71,10 @@ const register=async(req,res)=>{
                 })
               }
               }
-              
             await user.save() 
             const token = await user.genJwtToken()
             user.token=token
             user.password=undefined
-           
             res.cookie("token",token,cookieOptions) 
             res.status(200).json({
                 success:true,
@@ -100,7 +96,6 @@ const login=async(req,res)=>{
         const user = await userSchema
              .findOne({Email})
              .select('+password');
-           
             if(user==null || await user.validator(password,user.password) ==false){
               return res.status(400).json({
                     success:false,
@@ -122,41 +117,52 @@ const login=async(req,res)=>{
             message:"Failed to login, please try again."
         })
     }
-}
-
-async function getProfile(req,res,next){
-  try {
-const{token}=req.cookies;
- 
-  const user=await userSchema.findById(req.user._id)
- return res.status(200).json({
-    success:true,
-    message:'fetch Profile successfully',user
-})
-} catch (error) {
- return res.status(400).json({
-    success:false,
-    message:'Failed to fetch user profile'
-}) 
-}
-    }
-  
-    const updateProfile=async function(req,res,next){
+} 
+    const updateProfile=async function(req,res){
       try {
+        const {FullName,Email}=req.body
+        const data={
+          FullName:FullName,
+          Email:Email
+        }
             const {_id}=req.user;
-          await userSchema.findByIdAndUpdate(
+          const user=await userSchema.findByIdAndUpdate(
                _id,
-              {$set:req.body},
+              {$set:data},
               {runValidators:true}
               )
-            return res.status(200).json({
-              success:true,
-              message:'Profile update successfully'
-             })
+              if(req.file){
+                const options={
+                  folder:'colud_img',
+                  width:250,
+                  hieght:250,
+                  gravity:'faces',
+                  crop:'fill',
+                  overwrite:true
+                }
+                try{
+                const cloudinary_img=await cloudinary.v2.uploader.upload(req.file.path,options)
+                if(cloudinary_img){
+                  console.log(cloudinary_img);
+                  user.avatar.public_id=cloudinary_img.public_id;
+                  user.avatar.secure_URL = cloudinary_img.secure_url;
+                }
+                user.save()
+          }catch(error){
+                return res.status(400).json({
+                  success:false,
+                  message:"failed to upload image",error
+                })
+              }
+              }
+          return res.status(200).json({
+            success:"true",
+            message:"Update Successfully"
+          })
         } catch (error) {
-          return res.status(400).json({
-              success:false,
-              message:' unable to update profile, pleasse try again'
+          return res.status(200).json({
+              success:true,
+              message:"Updated"
             })
         }
      }
@@ -274,4 +280,4 @@ async function queryData(req,res,next){
 })
 }
 }
-export {register,login,queryData,logout,getProfile,updateProfile,forgetPassword,resetPassword} 
+export {register,login,queryData,logout,updateProfile,forgetPassword,resetPassword} 

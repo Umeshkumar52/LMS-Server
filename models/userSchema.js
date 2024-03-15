@@ -63,7 +63,7 @@ userSchema.methods={
       },
      genJwtToken:function(){
      return jwt.sign(
-            {_id:this._id,Email:this.Email,EnrollCourses:this.enrollCourses, role:this.role,subscription:this.subscription,avatar:this.avatar},
+            {_id:this._id,Email:this.Email,profile_url:this.avatar.secure_url,EnrollCourses:this.enrollCourses, role:this.role,subscription:this.subscription,avatar:this.avatar},
              process.env.JWT_SECRET_KEY,
             {
                 algorithm:'HS256',
@@ -73,7 +73,6 @@ userSchema.methods={
     },
     passwordResetToken:async function(){
        const resetToken=crypto.randomBytes(20).toString('hex')
-      
        this.resetpasswordToken=crypto
             .createHash('sha256')
             .update(resetToken)
@@ -84,10 +83,6 @@ userSchema.methods={
     resetPasswordHandller:async function(req,res){
       const {token}=req.params;
       const tokenExist=await userSchema.find(token)
-      if(token){
-        console.log(token);
-      }
-
     } 
 }
 export default new mongoose.model('User',userSchema)
