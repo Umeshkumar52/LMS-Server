@@ -7,7 +7,7 @@ let uri=`mongodb://${process.env.MONGOOSE_USER}:${process.env.MONGOOSE_PASSWORD}
 const dbconnect=async()=>{
    try {
    mongoose.connect(uri)
-
+ console.log("database connected");
 } catch (error) {
    console.log("Database not connected");
 }

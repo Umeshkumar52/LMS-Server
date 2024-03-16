@@ -26,7 +26,7 @@ app.use(cookieparser())
     cloud_name:process.env.CLOUD_NAME, 
     api_key:process.env.API_KEY, 
     api_secret:process.env.API_SECRET,
-    // secure:true
+    
   });
   export const razorpayInstance = new Razorpay({
     key_id:process.env.RAZORPAY_KEY_ID,
