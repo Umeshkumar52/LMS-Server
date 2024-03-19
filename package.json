@@ -26,7 +26,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "build": "cd client/client-app && npm install && npm run build"
+    "build": "npm install"
   },
   "engines": {
     "node": "v18.0.0"

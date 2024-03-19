@@ -1,9 +1,8 @@
 import nodemailer from 'nodemailer'
-
  const sendMail=async function(Email,subject,resetPasswordUrl){
     console.log("Sendmail calling");
     const transporter=nodemailer.createTransport({
-    Server:'smtp.elasticemail.com',
+    host:'smtp.ethereal.email',
     port:2525,
     secure:false,
     auth:{
@@ -17,10 +16,11 @@ import nodemailer from 'nodemailer'
         subject:subject,
         text:`Please click this link ${resetPasswordUrl}  to  reset your password`
        }
-         transporter.sendMail(optionDetail,(err,msg)=>{
+       await transporter.sendMail(optionDetail,(err,msg)=>{
             if(err){
                return "Failed to send mail"
             }
+            console.log(msg);
          })
  }
 export default sendMail

@@ -33,6 +33,7 @@ const Buysubscription=async function(req,res,next){
                message:"Not authorised please try again"
            })
         }
+        
       const subscription=await razorpayInstance.subscriptions.create({
        plan_id:process.env.COURSE_PLANE_ID,
        total_count:5,
@@ -40,7 +41,7 @@ const Buysubscription=async function(req,res,next){
       })
       const subscriptionId=subscription.id
       if(!subscription){
-        return res.status(400).json({
+        return res.status(404).json({
             success:false,
             message:"! OPPS, Unable to create subscription"
         })
@@ -53,7 +54,7 @@ const Buysubscription=async function(req,res,next){
       subscription_id:subscriptionId
       })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(404).json({
             success:false,
             message:"! OPPS, Unable to create subscription..."
         })
@@ -63,7 +64,6 @@ const verifySubscription=async function(req,res,next){
   const {_id}=req.user
  const {id}=req.params
   const { razorpay_payment_id,razorpay_subscription_id,razorpay_signature}=req.body;
-  
   const paymentDetail={
     "razorpay_payment_id":razorpay_payment_id,
     "razorpay_subscription_id":razorpay_subscription_id,

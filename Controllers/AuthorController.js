@@ -205,7 +205,7 @@ async function forgetPassword(req,res,next){
     const resetToken= await user.passwordResetToken()
     await user.save()
     const resetPasswordUrl=`http://localhost:3000/reset-password/?resetToken=${resetToken}`
-    
+    console.log(resetPasswordUrl);
    const mail=await SendMail(Email,'Reset your forget password',resetPasswordUrl);
   
   return res.status(200).json({
