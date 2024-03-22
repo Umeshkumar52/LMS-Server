@@ -3,6 +3,7 @@ import dbconnect from '../mogoose.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import { type } from 'os'
 dbconnect()
 const userSchema=new mongoose.Schema({
     
@@ -34,12 +35,7 @@ role:{
     enam:['ADMIN','USER'],
     default:'USER'
 },
-enrollCourses:[
-    {
-        _id:String,
-        tittle:String
-    }
-],
+enrollCourses:[],
 forgetPassword:"String",
 forgetPasswordExfire:Date,
 resetpasswordToken:'String',

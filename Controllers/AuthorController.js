@@ -88,8 +88,6 @@ const register=async(req,res)=>{
               })
             }
      }
-
-
 const login=async(req,res)=>{
     try {
       const {Email,password} =req.body
@@ -102,6 +100,7 @@ const login=async(req,res)=>{
                      message:"Invalide credentials"
                   })
             }
+           
               const token=await user.genJwtToken() 
               user.password=undefined;    
               user.token=token 
@@ -166,7 +165,6 @@ const login=async(req,res)=>{
             })
         }
      }
-
 async function logout(req,res,next){
  
 try {
@@ -280,4 +278,20 @@ async function queryData(req,res,next){
 })
 }
 }
-export {register,login,queryData,logout,updateProfile,forgetPassword,resetPassword} 
+async function querymsg(req,res,next){
+  try {
+  const response=await querySchema.find({})
+  return res.status(200).json({
+    success:true,
+    message:"Get message successfully",
+    response
+  })
+} catch (error) {
+  return res.status(400).json({
+    success:false,
+    message:"failed to get message",
+    response
+  })
+}
+}
+export {register,login,queryData,querymsg,logout,updateProfile,forgetPassword,resetPassword} 

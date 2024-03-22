@@ -3,7 +3,7 @@ import upload from "../midilewars/multerMiddilerware.js";
 import authorisedRole from "../midilewars/authorisedRoles.js";
 import isLogined from "../midilewars/isLogined.js";
 import {courseByName, getLectures, userEnrollCourses } from "../Controllers/courseController.js";
-import { courses, courseDetailById,checkEnrollCourseForUser,enrollCouurseByUser,createCourse,updateCourse,deletCourse,addLectures} from "../Controllers/courseController.js";
+import { courses, courseDetailById,checkEnrollCourseForUser,enrollCourseByUser,createCourse,updateCourse,deletCourse,addLectures} from "../Controllers/courseController.js";
 const router=Router()
 router.route('/')
 .get(courses)
@@ -18,7 +18,7 @@ router.route('/:id')
  router.route('/lectures/:id')
  .get(getLectures)
  router.route('/enrollCourse/:courseId')
- .post(isLogined,enrollCouurseByUser)
+ .post(isLogined,enrollCourseByUser)
  router.route('/checkEnrollCourseForuser/:courseId')
  .get(checkEnrollCourseForUser)
  router.route('/byName/:Name')

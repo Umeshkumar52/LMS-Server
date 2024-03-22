@@ -57,10 +57,9 @@ try {
     })
 }
 }
-const enrollCouurseByUser=async function(req,res,next){
+const enrollCourseByUser=async function(req,res,next){
     try {
         const{courseId}=req.params
-   
     const {_id}=req.user
     const user=await Users.findById(_id) 
     const course=await Courses.findById(courseId)
@@ -84,14 +83,11 @@ const enrollCouurseByUser=async function(req,res,next){
   
   }
   const userEnrollCourses=async function(req,res,next){
-    try {    
-    const data= req.body.map((elem)=>{
-        return elem._id
-     })
+    try {        
      const response=await Courses.find(
         {_id:{$in:
-          data
-        }
+         req.body
+            }
      })
      return res.status(200).json({
         success:true,
@@ -167,7 +163,7 @@ if(req.file){
                 if(result){
                         course.thumnail.publice_id=result.public_id;
                         course.thumnail.secure_url = result.secure_url;
-                        fs.unlink(`uplods/${req.file.filename}`)
+                        // fs.unlink(`uplods/${req.file.filename}`)
                      }
                      await course.save() 
                      res.status(200).json({
@@ -294,7 +290,7 @@ if(req.file){
         catch(error){
         return res.status(400).json({
             success:false,
-            message:error.message
+            message:"unable to upload lecture"
         })
         }
    }
@@ -326,7 +322,7 @@ export {
     courseByName,
     courseDetailById,
     userEnrollCourses,
-    enrollCouurseByUser,
+    enrollCourseByUser,
     checkEnrollCourseForUser,
     createCourse,
     updateCourse,

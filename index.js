@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended:true}))
 app.use(cookieparser())
     app.use(cors({
+      //origin:https://upskillslearnig.netlify.app
     origin:"http://localhost:3000",
     credentials:true,
      }))

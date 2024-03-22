@@ -69,6 +69,7 @@ const verifySubscription=async function(req,res,next){
     "razorpay_subscription_id":razorpay_subscription_id,
     "razorpay_signature":razorpay_signature
   }
+  console.log(id,_id);
     const generatedSignature= crypto
     .createHmac('sha256',process.env.RAZORPAY_SECRET_ID)
      .update(`${razorpay_payment_id} | ${razorpay_subscription_id}`)
@@ -86,9 +87,11 @@ const verifySubscription=async function(req,res,next){
             message:"Please, login again"
         })
       }
+      console.log(user);
      user.enrollCourses.push(id)
       user.subscription.status="Active"
-      user.save()}
+      user.save()
+      }
      return res.status(200).json({
         success:true,
         message:"Payment successfull",
