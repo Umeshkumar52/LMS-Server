@@ -1,18 +1,19 @@
 import Courses from '../models/courseModel.js'
 import Users from '../models/userSchema.js'
 import {v2 as cloudinary} from 'cloudinary'
+
 const courses=async  function(req,res,next){
  try {
     const {Name}=req.params;
     if(Name){
         const allCourses=await Courses.find({"tittle":Name})
-    res.status(200).json({
+   return res.status(200).json({
         success:true,
         message:allCourses
     })
     }{
     const allCourses=await Courses.find({})
-    res.status(200).json({
+   return res.status(200).json({
         success:true,
         message:allCourses
     })
@@ -30,12 +31,12 @@ const courseByName=async function(req,res,next){
       
         const response=await Courses.find({"tittle":Name})
     
-        res.status(200).json({
+       return res.status(200).json({
             success:true,
             message:response
         })
     } catch (error) {
-        console.log("error");
+       
         return  res.status(400).json({
             success:true,
             message:"Please try again"
@@ -46,7 +47,7 @@ const courseDetailById=async function(req,res,next){
    const courseId=req.params;
 try {
     const coursDetail=await Courses.findById({courseId})
-    res.status(200).json({
+    return res.status(200).json({
         success:true,
         message:coursDetail
     })
@@ -85,10 +86,8 @@ const enrollCourseByUser=async function(req,res,next){
   const userEnrollCourses=async function(req,res,next){
     try {        
      const response=await Courses.find(
-        {_id:{$in:
-         req.body
-            }
-     })
+        {_id:{$in:req.body}})
+
      return res.status(200).json({
         success:true,
         message: response
@@ -233,7 +232,7 @@ if(req.file){
         })
     }
          await course.deleteOne()      
-         res.status(200).json({
+        return res.status(200).json({
           success:true,
           message:'Course deleted successfully'
          })
@@ -263,6 +262,7 @@ if(req.file){
        }
        const lectureData={}
       if(req.file){
+       
         const result= await cloudinary.uploader
         .upload(req.file.path,{
                  folder:'colud_img',
@@ -282,7 +282,7 @@ if(req.file){
              });
               course.lecturesCount=course.lectures.length;
             await course.save()
-            res.status(200).json({
+           return res.status(200).json({
                 success:true,
                 message:"Lecture added successfully",course
              }) 
@@ -300,18 +300,18 @@ if(req.file){
         const courseData=await Courses.findById(id)
         
         if(!courseData){
-           res.status(400).json({
+          return res.status(400).json({
             success:false,
             message:"Course does not Exist"
            })
         }
         const lectures=courseData.lectures
-        res.status(200).json({
+       return res.status(200).json({
             success:true,
             message:"Fetch Lectures data successfull",lectures
         })
     } catch (error) {
-        res.status(400).json({
+return res.status(400).json({
             success:false,
             message:"Failed to fetch lectures",error
            })

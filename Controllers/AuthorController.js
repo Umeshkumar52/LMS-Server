@@ -10,6 +10,7 @@ const cookieOptions={
     httpOnly:true,
     secure:false
  }
+ 
 const register=async(req,res)=>{
     const {Email,password,FullName}=req.body;  
    
@@ -94,13 +95,13 @@ const login=async(req,res)=>{
         const user = await userSchema
              .findOne({Email})
              .select('+password');
-            if(user==null || await user.validator(password,user.password) ==false){
+             console.log( await user.validator(password,user.password) ==false);
+            if(user==null ||await user.validator(password,user.password) ==false){
               return res.status(400).json({
                     success:false,
                      message:"Invalide credentials"
                   })
             }
-           
               const token=await user.genJwtToken() 
               user.password=undefined;    
               user.token=token 

@@ -54,8 +54,8 @@ userSchema.pre('save',async function(next){
     return next()
 })
 userSchema.methods={
-    validator: async function(password,hashPasswor){
-        return await bcrypt.compare(password,hashPasswor)
+    validator: async function(password,hashPassword){
+        return await bcrypt.compare(password,hashPassword)
       },
      genJwtToken:function(){
      return jwt.sign(

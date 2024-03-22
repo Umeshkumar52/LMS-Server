@@ -87,7 +87,6 @@ const verifySubscription=async function(req,res,next){
             message:"Please, login again"
         })
       }
-      console.log(user);
      user.enrollCourses.push(id)
       user.subscription.status="Active"
       user.save()

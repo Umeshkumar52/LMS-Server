@@ -16,12 +16,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended:true}))
 app.use(cookieparser())
     app.use(cors({
-<<<<<<< HEAD
-      //origin:https://upskillslearnig.netlify.app
-    origin:"http://localhost:3000",
-=======
     origin:"https://upskillslearnig.netlify.app",
->>>>>>> ffe7fd43e8e9cebdc16049e5f3adc69fa2303d03
+    // origin:"http://localhost:3000",
     credentials:true,
      }))
   app.get('/ping',(_req,res)=>{
@@ -31,7 +27,6 @@ app.use(cookieparser())
     cloud_name:process.env.CLOUD_NAME, 
     api_key:process.env.API_KEY, 
     api_secret:process.env.API_SECRET,
-    
   });
   export const razorpayInstance = new Razorpay({
     key_id:process.env.RAZORPAY_KEY_ID,
